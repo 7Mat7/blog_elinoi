@@ -2,48 +2,73 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+use App\Repository\ArticleRepository;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+      normalizationContext={"groups"={"article:read"}},
+ *    denormalizationContext={"groups"={"article:write"}}
+ * )
+
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
  */
+
 class Article
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups("article:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups({"article:read", "article:write"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @Groups({"article:read", "article:write"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Groups("article:read")
      */
-    private $created_at;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Groups("article:read")
      */
-    private $updated_at;
+    private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="articles")
      * @ORM\JoinColumn(nullable=false)
+     *
+     *  @Groups({"article:read", "article:write"})
      */
     private $author;
+
+     public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
 
     public function getId(): ?int
     {
@@ -76,24 +101,24 @@ class Article
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
