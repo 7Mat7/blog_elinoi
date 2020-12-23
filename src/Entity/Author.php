@@ -33,21 +33,21 @@ class Author
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"author:read", "author:write"})
+     * @Groups({"author:read", "author:write", "article:read"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"author:read", "author:write"})
+     * @Groups({"author:read", "author:write", "article:read"})
      */
     private $lastname;
 
     /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author", orphanRemoval=true)
+     * @ApiSubresource(maxDepth=1)
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(referencedColumnName="id")
-     * @ApiSubresource
      *
      * @Groups({"author:read", "article:read"})
      */
