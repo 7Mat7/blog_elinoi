@@ -13,7 +13,7 @@ use App\Repository\ArticleRepository;
 
 /**
  * @ApiResource(
-      normalizationContext={"groups"={"article:read"}},
+ *    normalizationContext={"groups"={"article:read"}},
  *    denormalizationContext={"groups"={"article:write"}}
  * )
 
@@ -70,16 +70,14 @@ class Article
     /**
      * @ApiSubresource(maxDepth=1)
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(referencedColumnName="id")
      * @Groups({"article:read", "article:write"})
      */
     private $comments;
 
-     public function __construct()
+    public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->comments = new ArrayCollection();
-
     }
 
     public function getId(): ?int

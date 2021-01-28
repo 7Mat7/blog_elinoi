@@ -13,9 +13,21 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * @ApiResource(
-      normalizationContext={"groups"={"comment:read"}},
- *    denormalizationContext={"groups"={"comment:write"}}
+ *    normalizationContext={"groups"={"comment:read"}},
+ *    denormalizationContext={"groups"={"comment:write"}},
+ *    subresourceOperations={
+ *      "api_articles_comments_get_subresource"={
+ *          "normalization_context"={
+ *              "groups"={
+ *                  "comment:read"
+ *              }
+ *          }
+ *      }
+ *   }
+ *
+ *
  * )
+ *
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
 class Comment
@@ -51,7 +63,7 @@ class Comment
         return $this->article;
     }
 
-    public function setArticle(?Article $article): self
+    public function setArticle(Article $article): self
     {
         $this->article = $article;
 
